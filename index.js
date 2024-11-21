@@ -1,7 +1,13 @@
+const express = require("express");
 const mongoose = require("mongoose");
 const Post = require("./models/postModel");
 const User = require("./models/userModel");
+const userRoutes = require("./routes/userRoutes");
+const postRoutes = require("./routes/postRoutes");
+const cors = require("cors");
+
 // const { title } = require("process");
+
 
 mongoose
     .connect("mongodb://localhost:27017/blog")
@@ -171,9 +177,22 @@ mongoose
 
 // This is how to delete a user
 
-const deleteUserById = async (id) => {
-    const deleteUser = await User.findByIdAndDelete(id)
-    console.log(deleteUser)
-}
+// const deleteUserById = async (id) => {
+//     const deleteUser = await User.findByIdAndDelete(id)
+//     console.log(deleteUser)
+// }
 
-deleteUserById('673c72a1307b13505a23dc50')
+// deleteUserById('673c72a1307b13505a23dc50')
+
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+app.use("/api", userRoutes);
+// app.use("/api/post", postRoutes);
+const port = 5000;
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
