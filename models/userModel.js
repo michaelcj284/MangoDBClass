@@ -26,6 +26,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         reqiured: true,
     },
+    posts: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Post',
+        }
+    ]
 
     // date: {
     //     type: Date,
