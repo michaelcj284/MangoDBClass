@@ -22,8 +22,8 @@
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required><br><br>
 
-        <label for="confirmPassword">Confirm Password</label>
-        <input type="password" id="confirmPassword" name="confirmPassword" required><br><br>
+        <!-- <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" required><br><br> -->
 
         <input type="submit" value="Register">
     </form>
@@ -36,7 +36,7 @@
         const lastname = document.getElementById('lastname');
         const email = document.getElementById('email');
         const password = document.getElementById('password');
-        const confirmPassword = document.getElementById('confirmPassword');
+        // const confirmPassword = document.getElementById('confirmPassword');
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -51,7 +51,7 @@
                     lastname: lastname.value,
                     email: email.value,
                     password: password.value,
-                    confirmPassword: confirmPassword.value
+                    // confirmPassword: confirmPassword.value
                 })
             }).then(response => response.json())
             .then(data => {

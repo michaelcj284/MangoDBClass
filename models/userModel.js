@@ -1,5 +1,6 @@
 const { required } = require('joi')
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
+const Post = require('./postModel');
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -22,16 +23,19 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    confirmPassword: {
-        type: String,
-        reqiured: true,
-    },
+    // confirmPassword: {
+    //     type: String,
+    //     reqiured: true,
+    // },
     posts: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Post',
-        }
+        Post.schema // Embedding a document (Denormalization) - FOR QUERY PERFORMANCE
     ]
+    // posts: [
+    //     {
+    //         type: mongoose.Schema.Types.ObjectId, //Refrencing a document (Normalization) - FOR CONSISTENCY
+    //         ref: 'Post',
+    //     }
+    // ]
 
     // date: {
     //     type: Date,

@@ -5,9 +5,26 @@ const User = require("./models/userModel");
 const userRoutes = require("./routes/userRoutes");
 const postRoutes = require("./routes/postRoutes");
 const cors = require("cors");
+const bcrypt = require("bcrypt");
 
 // const { title } = require("process");
 
+// bcrypt.genSalt(10).then((salt) => {
+//     console.log("Salt" , salt);
+//     bcrypt.hash("123456789", salt).then((hashed) => {
+//         console.log("hashedPassword", hashed);
+//     })
+// })
+
+bcrypt.genSalt(10).then((salt) =>{
+    bcrypt.hash("123456789", salt).then((hashed) => {
+        hashPassword = hashed
+        console.log(hashPassword)
+        bcrypt.compare("12werinsifni9", hashed).then((res) => {
+            console.log(res)
+        })
+    })
+})
 
 mongoose
     .connect("mongodb://localhost:27017/blog")
