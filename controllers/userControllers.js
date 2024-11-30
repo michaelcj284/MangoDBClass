@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const Post = require("../models/postModel");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken")
 
 const test = (req, res) => {
     res.send('Hello World');
@@ -46,9 +47,45 @@ const getAllUsers = async (req, res) => {
     })
 }
 
+const loginUser = async (req, res) => {
+    //get user email and password
+    const {email, password} = req.body;
+    //check if user exists in the database
+    const user = await User.findOne({email});
+    //if user does not exsit, sent error message
+    if (!user) {
+        return res.status(400).json({
+            message: "User does not exist"
+        })
+    }
+    //compare password
+    const validPassword = await bcrypt.compare(password, user.password);
+    //if password is invalid, send error message
+    if (!validPassword) {
+        return res.status(400).json({
+            message: "Invalid password"
+        })
+    }
+
+    //generate token
+    const token = jwt.sign({id: user._id, email: user.email}, "mikesecret")
+
+
+
+    //send login message to user
+    // res.status(200).send({
+    //     message: "User logged in successfully",
+    //     accessToken: token
+    // })
+    res.header("x-auth-token", token).send({
+        message: "User logged in successfully",
+    })
+
+}
 
 module.exports = {
     test,
     createUser,
-    getAllUsers
+    getAllUsers,
+    loginUser
 }

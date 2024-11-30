@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form id="form">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <input type="submit" value="Login">
+    </form>
+
+    <script>
+        const form = document.getElementById('form');
+        const email = document.getElementById('email');
+        const password = document.getElementById('password');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            fetch('http://localhost:5000/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email.value,
+                    password: password.value,
+                    // confirmPassword: confirmPassword.value
+                })
+            }).then(response => response.json())
+            .then(data => {
+                alert(data.message, data.accessToken);
+                console.log(data);
+            }).catch(error => {
+                console.log(error);
+            });
+        });
+
+    </script>
+</body>
+</html>
