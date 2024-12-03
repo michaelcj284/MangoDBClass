@@ -13,11 +13,30 @@ const postSchema = new mongoose.Schema({
         type: String,
         required: [true, "Content is required"],
     },
-    date: {
-        type: Date,
-        default: Date.now,
+    author: {
+        type: String,
+        reuired: true,
     },
-})
+    tags: [{
+        type: String,
+        validate: {
+            validator: function (tags) {
+                return tags && tags.length > 0;
+            },
+            message: "A post must have at least one tag"
+        }
+    }],
+    comments: [{
+        user: {
+            type: String,
+            required: true,
+        },
+        date: {
+            type: Date,
+            default: Date.now,
+        }
+    }]
+}, {timestamps: true});
 
 const Post = mongoose.model('Post', postSchema);
 

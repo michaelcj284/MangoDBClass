@@ -3,6 +3,24 @@ const Post = require("../models/postModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken")
 
+// Auth Flow --
+// Register a new user
+// Login a user
+// Verify a user email
+// Forget password
+// Reset password
+
+
+
+// User Flow ----
+// Get all users
+// Get a single user
+// Update a user
+// Delete a user
+// Get all posts by a user
+
+
+
 const test = (req, res) => {
     res.send('Hello World');
 }
@@ -68,7 +86,7 @@ const loginUser = async (req, res) => {
     }
 
     //generate token
-    const token = jwt.sign({id: user._id, email: user.email}, "mikesecret")
+    const token = user.generateToken();
 
 
 
@@ -79,6 +97,7 @@ const loginUser = async (req, res) => {
     // })
     res.header("x-auth-token", token).send({
         message: "User logged in successfully",
+        token,
     })
 
 }

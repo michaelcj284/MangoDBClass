@@ -1,14 +1,16 @@
 const { required } = require('joi')
 const mongoose = require('mongoose');
 const Post = require('./postModel');
+const jwt = require("jsonwebtoken")
 
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
+        required: true,
+        unique: true,
     },
     firstname: {
         type: String,
-        required: true,
         required: true,
     },
     lastname: {
@@ -18,6 +20,7 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
+        unique: true,
     },
     password: {
         type: String,
@@ -42,6 +45,12 @@ const userSchema = new mongoose.Schema({
     //     default: Date.now,
     // },
 }, {timestamps: true})
+
+//To Generate a Tocken
+userSchema.methods.generateToken = function () {
+    const token = jwt.sign({id: this._id}, process.env.JWT_SECRET);
+    return token;
+}
 
 const User = mongoose.model('User', userSchema);
 

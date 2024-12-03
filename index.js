@@ -6,6 +6,8 @@ const userRoutes = require("./routes/userRoutes");
 const postRoutes = require("./routes/postRoutes");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
+require("dotenv").config();
+
 
 // const { title } = require("process");
 
@@ -208,7 +210,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api", userRoutes);
-// app.use("/api/post", postRoutes);
+app.use("/api", postRoutes);
 const port = 5000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
