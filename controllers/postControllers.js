@@ -25,6 +25,16 @@ const createPost = async(req, res) => {
 // Get a single post
 // Update a post
 // Delete a post
+const deletePost = async (req, res) => {
+    const {id} = req.params;
+    const result = await Post.findByIdAndDelete(id);
+    res.status(200).json({
+        message: "Post deleted successfully",
+        data: {
+            post: result,
+        },
+    });
+}
 // Get all posts by a specific user
 // Get all posts by a specific tag
 // Add a comment to a post
@@ -36,4 +46,5 @@ const createPost = async(req, res) => {
 
 module.exports = {
     createPost,
+    deletePost,
 }

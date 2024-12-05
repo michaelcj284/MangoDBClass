@@ -32,7 +32,8 @@ const userSchema = new mongoose.Schema({
     // },
     posts: [
         Post.schema // Embedding a document (Denormalization) - FOR QUERY PERFORMANCE
-    ]
+    ],
+    isAdmin: Boolean
     // posts: [
     //     {
     //         type: mongoose.Schema.Types.ObjectId, //Refrencing a document (Normalization) - FOR CONSISTENCY
@@ -48,7 +49,7 @@ const userSchema = new mongoose.Schema({
 
 //To Generate a Tocken
 userSchema.methods.generateToken = function () {
-    const token = jwt.sign({id: this._id}, process.env.JWT_SECRET);
+    const token = jwt.sign({id: this._id, admin: this.isAdmin}, process.env.JWT_SECRET);
     return token;
 }
 
