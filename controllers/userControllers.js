@@ -2,14 +2,129 @@ const User = require("../models/userModel");
 const Post = require("../models/postModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken")
+const nodemailer = require("nodemailer");
 
 // Auth Flow --
 // Register a new user
 // Login a user
-// Verify a user email
-// Forget password
-// Reset password
 
+// Verify a user email
+const verifyEmail = async (req, res) => {
+    const { email } = req.body;
+
+    //check if user exist in the database
+    const user =  await User.findOne({ email });
+
+    //if user does not exist, send error message
+    if (!user) {
+        return res.status(400).json({
+            message: "User does not exist",
+        });
+    }
+
+    //generate token
+    //const token = user.generateToken();
+
+    //send email
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth:
+        {
+            user: process.env.EMAIL,
+            pass: process.env.PASSWORD, 
+        },
+    });
+
+    const mailOptions = {
+        from: process.env.EMAIL,
+        to: email,
+        subject: "Email Verification",
+        text: `Click on the link to verify your email: http://127.0.0.1:5500/frontend/verify.html`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log(error);
+        } else {
+            res.status(200).json({
+                message: "Email send successfully",
+                data: {
+                    info,
+                },
+            });
+        }
+    })
+}
+// Forget password
+const forgotPassword = async (req, res) => {
+    const { email } = req.body;
+
+    //check if user exist in the database
+    const user =  await User.findOne({ email });
+
+    //if user does not exist, send error message
+    if (!user) {
+        return res.status(400).json({
+            message: "User does not exist",
+        });
+    }
+
+    //generate token
+    //const token = user.generateToken();
+
+    //send email
+    const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth:
+        {
+            user: process.env.EMAIL,
+            pass: process.env.PASSWORD, 
+        },
+    });
+
+    const mailOptions = {
+        from: process.env.EMAIL,
+        to: email,
+        subject: "Reset Password",
+        text: `Click on the link to Reset Password: http://127.0.0.1:5500/frontend/reset-password.html`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log(error);
+        } else {
+            res.status(200).json({
+                message: "Reset Password Link sent successfully",
+                data: {
+                    info,
+                },
+            });
+        }
+    })
+}
+// Reset password
+const resetPassword = async (req, res) => {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+
+    if (!user) {
+        return res.status(400).json({
+            message: "User does not exsit",
+        });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    //const result = await User.findOneAndUpdate({email}, {password: hashedPassword});
+
+    user.password = hashedPassword;
+    await user.save();
+
+    res.status(200).json({
+        message: "Password reset successfully",
+    });
+
+}
 
 
 // User Flow ----
@@ -106,5 +221,8 @@ module.exports = {
     test,
     createUser,
     getAllUsers,
-    loginUser
+    loginUser,
+    verifyEmail,
+    forgotPassword,
+    resetPassword,
 }
