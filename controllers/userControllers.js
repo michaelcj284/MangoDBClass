@@ -217,6 +217,19 @@ const loginUser = async (req, res) => {
 
 }
 
+const uploadImage = async (req, res) => {
+    if (!req.file) {
+        res.status(400).send("No file added")
+    }
+
+    const uploadRes = await cloudinary.uploader.upload(req.file.path)
+
+    res.status(201).json({
+        message: "Image uploaded successfully",
+        imageUrl: uploadRes
+    });
+}
+
 module.exports = {
     test,
     createUser,
@@ -225,4 +238,5 @@ module.exports = {
     verifyEmail,
     forgotPassword,
     resetPassword,
-}
+    uploadImage
+};
