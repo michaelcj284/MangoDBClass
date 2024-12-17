@@ -1,4 +1,5 @@
-const multer = require('multer')
+const multer = require('multer');
+const fs = require("fs");
 const { consumers } = require('nodemailer/lib/xoauth2')
 
 
@@ -11,4 +12,13 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
-module.exports = upload
+const clearUploadFiles = (req, res, next) => {
+    res.on("finish", () => {
+        if (res.statusCode === 201 || res.statusCode === 200) {
+                fs.unlinkSync(req.file.path);
+        }
+    });
+    next();
+};
+
+module.exports = {upload, clearUploadFiles}

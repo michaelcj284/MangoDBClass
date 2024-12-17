@@ -3,6 +3,7 @@ const Post = require("../models/postModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken")
 const nodemailer = require("nodemailer");
+const cloudinary = require("../config/cloudinary");
 
 // Auth Flow --
 // Register a new user
@@ -218,16 +219,24 @@ const loginUser = async (req, res) => {
 }
 
 const uploadImage = async (req, res) => {
+   try {
+    
     if (!req.file) {
-        res.status(400).send("No file added")
-    }
+    res.status(400).send("No file added")
+}
 
-    const uploadRes = await cloudinary.uploader.upload(req.file.path)
+const uploadRes = await cloudinary.uploader.upload(req.file.path)
 
-    res.status(201).json({
-        message: "Image uploaded successfully",
-        imageUrl: uploadRes
-    });
+res.status(201).json({
+    message: "Image uploaded successfully",
+    imageUrl: uploadRes
+});
+   } catch (error) {
+    res.status(500).json({
+        message: "An error occurred",
+        error: error.message
+    })
+}
 }
 
 module.exports = {
