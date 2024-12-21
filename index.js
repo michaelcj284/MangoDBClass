@@ -29,7 +29,7 @@ bcrypt.genSalt(10).then((salt) =>{
 })
 
 mongoose
-    .connect("mongodb://localhost:27017/blog")
+    .connect(process.env.MONGO_URI)
     .then(() => {
         console.log("Connected to MongoDB");
     })

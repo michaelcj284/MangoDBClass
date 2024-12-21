@@ -1,9 +1,28 @@
 // Import the Post model
 const Post = require("../models/postModel");
+const cloudinary = require("../config/cloudinary");
 
 // Create a new post
 const createPost = async(req, res) => {
-    const {title, content, author, tags} = req.body;
+    try {
+        const {title, content, author, tags} = req.body;
+        const files = req.files;
+
+        if (!files || files.length === 0) {
+            res.status(400).json({
+                message: "No file added",
+            });
+        }
+
+        const uploadPromises = req.files.map((file) => 
+            cloudinary.uploader.upload(file.path, {
+                folder: "posts-folder",
+            })
+        );
+
+        const uploadResponse = await Promise.all(uploadPromises);
+
+        const images = uploadResponse.map((res) => res.secure_url);
 
     const newPost = new Post({
         title,
@@ -20,7 +39,14 @@ const createPost = async(req, res) => {
             post: result,
         },
     });
-}
+    } catch (ex) {
+        console.error(ex);
+        res.status(400).json({
+            message: ex.message,
+        });
+        
+    }
+};
 // Get all posts
 // Get a single post
 // Update a post
